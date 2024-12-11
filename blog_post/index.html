@@ -1,0 +1,818 @@
+<html>
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<link rel="shortcut icon" href="images/icon.ico">
+<style type="text/css">
+	body {
+		background-color: #f5f9ff;
+	}
+
+	/* Hide both math displays initially, will display based on JS detection */
+  .mathjax-mobile, .mathml-non-mobile { display: none; }
+
+  /* Show the MathML content by default on non-mobile devices */
+  .show-mathml .mathml-non-mobile { display: block; }
+  .show-mathjax .mathjax-mobile { display: block; }
+
+	.content-margin-container {
+		display: flex;
+		width: 100%; /* Ensure the container is full width */
+		justify-content: left; /* Horizontally centers the children in the container */
+		align-items: center;  /* Vertically centers the children in the container */
+	}
+	.main-content-block {
+		width: 70%; /* Change this percentage as needed */
+    max-width: 1100px; /* Optional: Maximum width */
+		background-color: #fff;
+		border-left: 1px solid #DDD;
+		border-right: 1px solid #DDD;
+		padding: 8px 8px 8px 8px;
+		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;#"Avenir";
+	}
+	.margin-left-block {
+			font-size: 14px;
+			width: 15%; /* Change this percentage as needed */
+			max-width: 130px; /* Optional: Maximum width */
+			position: relative;
+			margin-left: 10px;
+			text-align: left;
+			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;#"Avenir";
+			padding: 5px;
+	}
+	.margin-right-block {
+			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;#"Avenir";
+			font-size: 14px;
+			width: 25%; /* Change this percentage as needed */
+			max-width: 256px; /* Optional: Maximum width */
+			position: relative;
+			text-align: left;
+			padding: 10px;  /* Optional: Adds padding inside the caption */
+	}
+
+	img {
+			max-width: 100%; /* Make sure it fits inside the container */
+			height: auto;
+			display: block;
+			margin: auto;
+	}
+	.my-video {
+			max-width: 100%; /* Make sure it fits inside the container */
+			height: auto;
+			display: block;
+			margin: auto;
+	}
+	/* Hide both video displays initially, will display based on JS detection */
+  .vid-mobile, .vid-non-mobile { display: none; }
+
+  /* Show the video content by default on non-mobile devices */
+  .show-vid-mobile .vid-mobile { display: block; }
+  .show-vid-non-mobile .vid-non-mobile { display: block; }
+
+	a:link,a:visited
+	{
+		color: #0e7862; /*#1367a7;*/
+		text-decoration: none;
+	}
+	a:hover {
+		color: #24b597; /*#208799;*/
+	}
+
+	h1 {
+		font-size: 18px;
+		margin-top: 4px;
+		margin-bottom: 10px;
+	}
+
+	table.header {
+    font-weight: 300;
+    font-size: 17px;
+    flex-grow: 1;
+		width: 70%;
+    max-width: calc(100% - 290px); /* Adjust according to the width of .paper-code-tab */
+	}
+	table td, table td * {
+	    vertical-align: middle;
+	    position: relative;
+	}
+	table.paper-code-tab {
+	    flex-shrink: 0;
+	    margin-left: 8px;
+	    margin-top: 8px;
+	    padding: 0px 0px 0px 8px;
+	    width: 290px;
+	    height: 150px;
+	}
+
+	.layered-paper { /* modified from: http://css-tricks.com/snippets/css/layered-paper/ */
+		box-shadow:
+		        0px 0px 1px 1px rgba(0,0,0,0.35), /* The top layer shadow */
+		        5px 5px 0 0px #fff, /* The second layer */
+		        5px 5px 1px 1px rgba(0,0,0,0.35), /* The second layer shadow */
+		        10px 10px 0 0px #fff, /* The third layer */
+		        10px 10px 1px 1px rgba(0,0,0,0.35); /* The third layer shadow */
+		margin-top: 5px;
+		margin-left: 10px;
+		margin-right: 30px;
+		margin-bottom: 5px;
+	}
+
+	hr {
+    height: 1px; /* Sets the height of the line to 1 pixel */
+    border: none; /* Removes the default border */
+    background-color: #DDD; /* Sets the line color to black */
+  }
+
+	div.hypothesis {
+		width: 80%;
+		background-color: #EEE;
+		border: 1px solid black;
+		border-radius: 10px;
+		-moz-border-radius: 10px;
+		-webkit-border-radius: 10px;
+		font-family: Courier;
+		font-size: 18px;
+		text-align: center;
+		margin: auto;
+		padding: 16px 16px 16px 16px;
+	}
+
+	div.citation {
+    font-size: 0.8em;
+    background-color:#fff;
+    padding: 10px;
+		height: 200px;
+  }
+
+	.fade-in-inline {
+		position: absolute;
+		text-align: center;
+		margin: auto;
+		-webkit-mask-image: linear-gradient(to right,
+																			transparent 0%,
+																			transparent 40%,
+																			black 50%,
+																			black 90%,
+																			transparent 100%);
+		mask-image: linear-gradient(to right,
+																transparent 0%,
+																transparent 40%,
+																black 50%,
+																black 90%,
+																transparent 100%);
+		-webkit-mask-size: 8000% 100%;
+		mask-size: 8000% 100%;
+		animation-name: sweepMask;
+		animation-duration: 4s;
+		animation-iteration-count: infinite;
+		animation-timing-function: linear;
+		animation-delay: -1s;
+	}
+
+	.fade-in2-inline {
+			animation-delay: 1s;
+	}
+
+	.inline-div {
+			position: relative;
+	    display: inline-block; /* Makes both the div and paragraph inline-block elements */
+	    vertical-align: top; /* Aligns them at the top, you can adjust this to middle, bottom, etc., based on your needs */
+	    width: 50px; /* Optional: Adds space between the div and the paragraph */
+	}
+
+</style>
+
+	  <title>The Platonic Representation Hypothesis</title>
+      <meta property="og:title" content="The Platonic Representation Hypothesis" />
+			<meta charset="UTF-8">
+  </head>
+
+  <body>
+
+		<div class="content-margin-container">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+						<table class="header" align=left>
+								<tr>
+									<td colspan=4>
+										<span style="font-size: 32px; font-family: 'Courier New', Courier, monospace; /* Adds fallbacks */">
+											Investigating Time-Based Positional Encodings in Transformers through League of Legends Rank Prediction
+										</span>
+									</td>
+								</tr>
+								<tr>
+										<td align=left>
+												<span style="font-size:17px"><a href="your_website">Shepard Jiang</a></span>
+										</td>
+										<td align=left>
+												<span style="font-size:17px"><a href="your_partner's_website">Arnold Su</a></span>
+										</td>
+								<tr>
+									<td colspan=4 align=left><span style="font-size:18px">Final project for 6.7960, MIT</span></td>
+								</tr>
+						</table>
+					</div>
+					<div class="margin-right-block">
+					</div>
+		</div>
+
+		<div class="content-margin-container" id="intro">
+				<div class="margin-left-block">
+          <!-- table of contents here -->
+					Code available on github: <a href=https://github.com/SheepJenga/LoL_prediction>repo</a>
+				</div>
+		    <div class="main-content-block">
+            <!--You can embed an image like this:-->
+            <img src="./images/lol_image.jpeg" width=512px/>
+		    </div>
+		    <div class="margin-right-block">
+				League of Legends is a popular multiplayer online battle arena (MOBA) game with over 100 million active players each month.
+		    </div>
+		</div>
+
+    <div class="content-margin-container" id="intro">
+		<div class="margin-left-block"></div>
+		<div class="main-content-block">
+			<h2>Introduction</h2>
+			<p>
+			Over the past decade, Transformers have become an increasingly popular choice of architecture for deep learning models. 
+			In particular, among multiple advantages of Transformers, the ability to capture long-range dependencies and interactions 
+			has garnered much excitement for modeling time series over more traditional architectures such as RNNs. Already Transformers 
+			have been used in tasks such as forecasting, classification, and anomaly detection, as in <a href="#ref1">[1]</a>. 
+			</p>
+			
+			<p>
+			In fields such as natural language processing, positional encodings are essential as the inherit positions of words holds a 
+			lot of semantic meaning. In time series data, however, positions is arguably not the most important part of the sequential 
+			data, but instead the time data itself. Informer by Zhou et al <a href="#ref2">[2]</a> proposed to encode timestamps as an 
+			additional positional encoding for time series forecasting. Similarly, in FEDformer <a href="#ref3">[3]</a> and Autofomer 
+			<a href="#ref4">[4]</a>, timestamps were also used as a form of positional encoding for forecasting tasks. However, to our 
+			knowledge not much work has been done investigating the effects of encoding methods using <i>timestamp data</i> for <i>classification</i>
+			tasks on time series data. 
+			</p>
+
+			<p>
+			In this blog we investigate the effects of various methods of encoding and incorporating timestamp data for classification 
+			tasks on time series data. The model will be tasked to predict a player's "rank" based off a match in the game "League of Legends".
+			League of Legends is a team-based 5v5 multiplayer game, where each player controls a "Champion" with unique stats and abilities.
+			A game of League of Legends offers both high levels of complexity, while also supplying lots of quantitative metrics and data throughout
+			the course of the match. Transformers have also been proven to be effective architectures at processing video game data by previous 
+			works <a href="#ref5">[5]</a> <a href="#ref6">[6]</a>.
+			</p>
+			
+			<p>
+			The encoding methods we used in our experiments include traditional forms of absolute embeddings (embeddings based on raw timestamp
+			value only), relative embeddings (embeddings based on the timestamp differences between datapoints in a sequence), and no embeddings 
+			(input the timestamp value as is). We hope our investigation can bring more insight into the benefits and nuances positional encodings 
+			can give to the Transformer for future applications on time series data.
+			</p>
+		</div>
+	</div>
+
+	<div class="content-margin-container" id="background">
+		<div class="margin-left-block"></div>
+		<div class="main-content-block">
+			<h2>Background</h2>
+			
+			<h3>Transformer</h3>
+
+			<p>
+			The vanilla Transformer as proposed in <a href="#ref7">[7]</a> supports an encoder-decoder structure. They are composed of multiple identical blocks, where each block consists of a multi-head self-attention module connected to a feed-forward network.
+			</p>
+
+			<h3>Self-Attention</h3>
+
+			<p>
+			As explained in <a href="#ref1">[7]</a> and <a href="#ref2">[8]</a>, each attention head operates on an input sequence <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>=</mo><mrow><mi>x</mi><sub><mi>1</mi></sub><mo>,</mo><mi>...</mi><mo>,</mo><mi>x</mi><sub><mi>T</mi></sub></mrow></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi></math> elements, and computes a new sequence <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>z</mi><mo>=</mo><mrow><mi>z</mi><sub><mi>1</mi></sub><mo>,</mo><mi>...</mi><mo>,</mo><mi>z</mi><sub><mi>T</mi></sub></mrow></math> of the same length. It follows a QKV (query, key, value) based model. Each output element <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>z</mi><sub><mi>i</mi></sub></math> is computed as
+			</p>
+
+			<img src="./images/1.png" width=150px/>
+
+			<p>
+			and each weight coefficient is computed via softmax
+			</p>
+
+			<img src="./images/2.png" width=150px/>
+
+			<p>
+			where
+			</p>
+
+			<img src="./images/3.png" width=150px/>
+
+			<p>
+			<i><b>Q, K, V</b></i> represent the weight matrices for query, key, and value respectively.
+			</p>
+
+			<h3>Positional Encoding</h3>
+
+			<p>
+			A vanilla Transformer has no recurrence and is permutation-invariant, instead utilizing positional encoding added to input embeddings to model the sequence information. In general, positional embeddings follow one of two archetypes: absolute or relative. Absolute positional embeddings encode the absolute position of a unit within a sequence. Relative embeddings, on the other hand, encode the position of a unit <i>relative</i> to other units in a sequence. Both methodologies have had strong results, but neither has ever been proven to have a clear advantage over the other <a href="#ref9">[9]</a>.
+			</p>
+
+			<h4>Learned Absolute Positional Encoding</h3>
+
+			<p>
+			The paper <a href="#ref10">[10]</a> proposed what we call a <i>learned absolute positional encoding</i> which uses an end-to-end approach for learning embeddings for each positional unit <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>t</mi></math> ∈ &lbrace; <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>0</mi><mo>,</mo><mi>...</mi><mo>,</mo><mi>T</mi></mrow></math> where <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi></math> &rbrace; is the max length of any sequence.
+			</p>
+
+			<h4>Sinusoidal Positional Encoding</h3>
+
+			<p>
+			In <a href="#ref7">[7]</a> the positional encoding proposed is an absolute positional encoding using sine and cosine functions
+			</p>
+
+			<img src="./images/4.png" width=270px/>
+
+			<p>
+			which we will call a <i>sinusoidal positional encoding</i> scheme.
+			</p>
+
+			<h4>Relative Positional Encoding</h3>
+
+			<p>
+			Finally, we will define a <i>relative positional encoding</i> as the one originally proposed in <a href="#ref8">[8]</a>. Relative positional encoding is incorporated into the Transformer by modifying the self-attention mechanisms in eq. (1):
+			</p>
+
+			<img src="./images/6.png" width=180px/>
+
+			<p>
+			and eq. (3) to
+			</p>
+
+			<img src="./images/7.png" width=180px/>
+
+			<p>
+			The values <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><sub><mi>ij</mi></sub><sup><mi>V</mi></sup></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><sub><mi>ij</mi></sub><sup><mi>K</mi></sup></math> are <i>learned</i> embeddings dependent on the positional difference between <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>i</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>j</mi></math>.
+			</p>
+			
+
+			<h2>Methods</h2>
+
+			<h3>Input Data</h3>
+
+			<p>Each datapoint <math><msub><mi>x</mi></msub><mo>,</mo><msub><mi>x</mi><mi>s</mi></msub></math> for the model represents a match of League of Legends. A match is modeled as a sequence of "events" and a vector of aggregate statistics. In other words, 
+				<math>
+					<msub><mi>x</mi></msub>
+					<mo>=</mo>
+					<mo>(</mo>
+					<msub><mi>x</mi><mn>1</mn></msub>
+					<mo>,</mo>
+					<mo>&#x2026;</mo>
+					<mo>,</mo>
+					<msub><mi>x</mi><mi>T</mi></msub>
+					<mo>)</mo>
+					<mo>&#x2208;</mo>
+					<msup>
+						<mi>&#x211D;</mi>
+						<mrow>
+							<mi>T</mi>
+							<mo>&#x00D7;</mo>
+							<msub><mi>d</mi><mi>event</mi></msub>
+						</mrow>
+					</msup>
+				</math>
+				where each 
+				<math>
+					<msub><mi>x</mi><mi>i</mi></msub>
+					<mo>&#x2208;</mo>
+					<msup>
+						<mi>&#x211D;</mi>
+						<msub><mi>d</mi><mi>event</mi></msub>
+					</msup>
+				</math> 
+				represents an event, and 
+				<math>
+					<msub><mi>x</mi><mi>s</mi></msub>
+					<mo>&#x2208;</mo>
+					<msup>
+						<mi>&#x211D;</mi>
+						<msub><mi>d</mi><mi>summary</mi></msub>
+					</msup>
+				</math> 
+				represents all summarizing data about the match.
+			</p>		
+			
+			<p>Every "event" vector 
+				<math><msub><mi>x</mi><mi>i</mi></msub></math> includes information about:
+			</p>
+			<ul>
+				<li>The kind of event it is</li>
+				<li>The specific player in the match</li>
+				<li>The team they are on</li>
+				<li>The <math><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>)</mo></math> position on the game map</li>
+				<li>The cumulative gold, experience points, and CS (creep score) values</li>
+			</ul>
+			<p>Event types encapsulate key moments in a game such as building kills, champion kills, elite monster kills, level-ups, and ward placements. Depending on the event, additional information may be needed, such as participating players for kills.</p>
+			
+			<p>Information is encoded into these vectors depending on whether they are identifiers or numerical. If the information is an identifier, we use one-hot encoding. Otherwise, we concatenate the value as is. For example:</p>
+			<ul>
+				<li>The player information is encoded as a 10-dimensional one-hot vector since every match has 10 players.</li>
+				<li>Cumulative gold is encoded as the number itself.</li>
+			</ul>
+			
+			<p>All numerical data is normalized using min-max scaling. Furthermore, all non-timestamp data is encoded by a learned MLP before being inputted into the transformer. The original data 
+				<math>
+					<msub><mi>x</mi></msub><mo>,</mo><msub><mi>x</mi><mi>s</mi></msub>
+				</math> 
+				has dimensions:
+			</p>
+			<ul>
+				<li><math><msub><mi>d</mi><mi>event</mi></msub><mo>=</mo><mn>50</mn></math></li>
+				<li><math><msub><mi>d</mi><mi>summary</mi></msub><mo>=</mo><mn>160</mn></math></li>
+			</ul>
+			<p>For both inputs, we use an embedded hidden dimension of 10 (<math><msub><mi>d</mi><mi>model</mi></msub><mo>=</mo><mn>10</mn></math>).
+			</p>
+
+			<h3>Transformer</h3>
+
+			<p>The transformer uses the vanilla encoder architecture from <cite>Attention is All You Need</cite>. Under computational resource constraints and considering the size of our data, the parameters are as follows:</p>
+			<ul>
+				<li>Hidden dimension of attention heads: 128</li>
+				<li>Hidden dimension of feed-forward network: 256</li>
+				<li>Number of attention heads: 8</li>
+				<li>Number of layers: 6</li>
+			</ul>
+			<p>Additionally, we apply a causal attention mask.</p>
+
+			<p>The transformer only encodes the sequential event data 
+				<math>
+					<msub><mi>x</mi></msub>
+					<mo>&#x2208;</mo>
+					<msup>
+						<mi>&#x211D;</mi>
+						<mrow>
+							<mi>T</mi>
+							<mo>&#x00D7;</mo>
+							<msub><mi>d</mi><mi>model</mi></msub>
+						</mrow>
+					</msup>
+				</math>. 
+				Given this input, the transformer will output the latent variables 
+				<math>
+					<msub><mi>z</mi></msub>
+					<mo>&#x2208;</mo>
+					<msup>
+						<mi>&#x211D;</mi>
+						<mrow>
+							<mi>T</mi>
+							<mo>&#x00D7;</mo>
+							<msub><mi>d</mi><mi>model</mi></msub>
+						</mrow>
+					</msup>
+				</math>.
+			</p>
+
+			<h3>Output Layer</h3>
+
+			<p>With the encoded sequential data 
+				<math>
+					<msub><mi>z</mi></msub>
+					<mo>&#x2208;</mo>
+					<msup>
+						<mi>&#x211D;</mi>
+						<mrow>
+							<mi>T</mi>
+							<mo>&#x00D7;</mo>
+							<msub><mi>d</mi><mi>model</mi></msub>
+						</mrow>
+					</msup>
+				</math>, 
+				we will concatenate it with the encoded summary data 
+				<math>
+					<msub><mi>z</mi><mi>s</mi></msub>
+					<mo>=</mo>
+					<mi>f</mi>
+					<mo>(</mo>
+					<msub><mi>x</mi><mi>s</mi></msub>
+					<mo>)</mo>
+					<mo>&#x2208;</mo>
+					<msup><mi>&#x211D;</mi><msub><mi>d</mi><mi>model</mi></msub></msup>
+				</math>, 
+				where <math><mi>f</mi></math> is a linear layer.
+			</p>
+			
+			<p>Finally, the model outputs a matrix of logits 
+				<math>
+					<msub><mi>y</mi></msub>
+					<mo>=</mo>
+					<mi>g</mi>
+					<mo>(</mo>
+					<mi>z</mi>
+					<mo>,</mo>
+					<msub><mi>z</mi><mi>s</mi></msub>
+					<mo>)</mo>
+					<mo>&#x2208;</mo>
+					<msup>
+						<mi>&#x211D;</mi>
+						<mrow>
+							<mn>10</mn>
+							<mo>&#x00D7;</mo>
+							<mi>K</mi>
+						</mrow>
+					</msup>
+				</math>, 
+				where <math><mi>g</mi></math> is an MLP. Each match has 10 players, and 
+				<math><mi>K</mi></math> is the number of possible ranks. Thus, each match gives us 
+				<math><mn>10</mn></math> players to estimate their rank. In our data, 
+				<math><mi>K</mi><mo>=</mo><mn>31</mn></math>.
+			</p>
+			
+			<h3>Time-Based Positional Encodings</h3>
+			
+			<p>We conduct several experiments with various types of positional encodings for the sequential data 
+				<math>
+					<mi>x</mi>
+				</math>. 
+				Every event 
+				<math>
+					<msub><mi>x</mi><mi>i</mi></msub>
+					<mo>&#x2208;</mo>
+					<mi>x</mi>
+				</math> 
+				contains timestamp data. Thus, given a sequence 
+				<math>
+					<mi>x</mi>
+					<mo>&#x2208;</mo>
+					<msup>
+						<mi>&#x211D;</mi>
+						<mrow>
+							<mi>T</mi>
+							<mo>&#x00D7;</mo>
+							<msub><mi>d</mi><mi>event</mi></msub>
+						</mrow>
+					</msup>
+				</math>, 
+				we have a timestamp sequence 
+				<math>
+					<mi>t</mi>
+					<mo>&#x2208;</mo>
+					<msup>
+						<mi>&#x211D;</mi>
+						<mi>T</mi>
+					</msup>
+				</math>. 
+				Our timestamp data is given in milliseconds.
+			</p>
+			
+			<h4>No Encoding</h4>
+
+			<p>With no encoding, we keep the timestamp data 
+				<math>
+					<mi>t</mi>
+				</math> 
+				as part of the datapoint 
+				<math>
+					<mi>x</mi>
+				</math>. 
+				The timestamp data is normalized, and then encoded as part of 
+				<math>
+					<mi>x</mi>
+				</math> 
+				through the transformer as usual.
+			</p>
+			
+			<h4>Learned Absolute Encoding</h4>
+			
+			<p>Absolute encoding means we encode the timestamps 
+				<math>
+					<mi>t</mi>
+				</math> 
+				into a vector 
+				<math>
+					<msub>
+						<mi>z</mi>
+						<mi>t</mi>
+					</msub>
+					<mo>&#x2208;</mo>
+					<msup>
+						<mi>&#x211D;</mi>
+						<mrow>
+							<mi>T</mi>
+							<mo>&#x00D7;</mo>
+							<msub>
+								<mi>d</mi>
+								<mtext>model</mtext>
+							</msub>
+						</mrow>
+					</msup>
+				</math> 
+				to be added to our encoded inputs 
+				<math>
+					<mi>z</mi>
+				</math>. 
+				Thus, the transformer encodes the input 
+				<math>
+					<mi>z</mi>
+					<mo>+</mo>
+					<msub>
+						<mi>z</mi>
+						<mi>t</mi>
+					</msub>
+				</math>.
+			</p>
+			<p>There are two ways we can encode 
+				<math>
+					<mi>t</mi>
+				</math> 
+				into 
+				<math>
+					<msub>
+						<mi>z</mi>
+						<mi>t</mi>
+					</msub>
+				</math>:
+			</p>
+			<ul>
+				<li>
+					<b>Bucketed timestamp embeddings:</b> We bucket timestamps into time intervals. Based on the discretized time interval, we can produce an embedding 
+					<math>
+						<mi>f</mi>
+						<mo stretchy="false">(</mo>
+						<mi>t</mi>
+						<mo stretchy="false">)</mo>
+						<mo>&#x2208;</mo>
+						<msub>
+							<mi>&#x211D;</mi>
+							<msub>
+								<mi>d</mi>
+								<mtext>model</mtext>
+							</msub>
+						</msub>
+					</math>, 
+					where 
+					<math>
+						<mi>t</mi>
+						<mo>&#x2208;</mo>
+						<mo>{</mo>
+						<mn>0</mn>
+						<mo>,</mo>
+						<mn>1</mn>
+						<mo>,</mo>
+						<mn>2</mn>
+						<mo>,</mo>
+						<mo>&#x2026;</mo>
+						<mo>,</mo>
+						<msub>
+							<mi>T</mi>
+							<mtext>max</mtext>
+						</msub>
+						<mo>}</mo>
+					</math>, 
+					where 
+					<math>
+						<msub>
+							<mi>T</mi>
+							<mtext>max</mtext>
+						</msub>
+					</math> 
+					is the maximum number of buckets the time series data can occupy. We chose to bucket our timestamp data into 10-second buckets.
+				</li>
+				<li>
+					<b>MLP timestamp embeddings:</b> Timestamp data 
+					<math>
+						<mi>t</mi>
+					</math> 
+					is embedded using an MLP to produce a 
+					<math>
+						<msub>
+							<mi>z</mi>
+							<mi>t</mi>
+						</msub>
+						<mo>&#x2208;</mo>
+						<msup>
+							<mi>&#x211D;</mi>
+							<mrow>
+								<mi>T</mi>
+								<mo>&#x00D7;</mo>
+								<msub>
+									<mi>d</mi>
+									<mtext>model</mtext>
+								</msub>
+							</mrow>
+						</msup>
+					</math> 
+					embedding. Before embedding, timestamp data is normalized using min-max normalization.
+				</li>
+			</ul>
+			<p>Both methods are optimized and <i>learnable</i> as part of the model.</p>
+			
+			<h4>Sinusoidal Encoding</h4>
+
+			We use the same encoding procedure as in the Sinusoidal Positional Encoding section above, but instead use "timestamp" in place of "pos". Before encoding, timestamps are normalized using min-max normalization.
+
+			<h4>Learned Relative Encoding</h4>
+
+			<p>Following the same scheme as presented in the Relative Positional Encoding section above, but instead of using positional differences between datapoints 
+				<math>
+					<mi>i</mi>
+				</math> 
+				and 
+				<math>
+					<mi>j</mi>
+				</math>, 
+				we will use the timestamp differences between datapoints. Similar to absolute encoding, the differences are first bucketed into time intervals and then encoded into the representations 
+				<math>
+					<msub>
+						<mi>a</mi>
+						<mrow>
+							<mi>ij</mi>
+						</mrow>
+					</msub>
+				</math> 
+				for 
+				<math>
+					<mi>i</mi>
+					<mo>,</mo>
+					<mi>j</mi>
+					<mo>&#x2208;</mo>
+					<mo>[</mo>
+					<mi>T</mi>
+					<mo>]</mo>.
+				</math> 
+			</p>
+			<p>Similar to learned absolute encodings, we can choose to bucket our timestamp differences into buckets (we chose 10-second buckets) or use an MLP to encode the true timestamp values.</p>
+			
+			<img src="./images/9.png" width=600px/>
+
+			<h2>Results</h2>
+
+			<h3>Model Performance</h3>
+			
+			<p>
+			In our experiments, we ran our model using batch size of 32, AdamW optimizer, and cosine annealing learning rate. We had 33812 total number of datapoints, and split into 23668, 6796, and 3348 datapoints for training, validation, and testing respectively. Experiments were ran for 15 epochs.
+			</p>
+			
+			<p>
+			Knowing the sinusoidal is a well-tested and well-performing encoding, our initial experiments were to estimate over 31 separate ranks. Noticing the model struggled with the high number of classes, we decided to consolidate our classes into 8 classes, as we note that similar ranks can be considered the same class. Results for sinusoidal encoding for 31 and 8 classes are show above.
+			</p>
+
+			<p>
+			Deciding to stick with 8 classes, we evaluated our different models with different encodings using the models loss values. We ran four experiments for estimating over 8 ranks: no encoding, absolute encoding using bucketed timestamp embeddings, sinusoidal encodings, and relative encodings. These experiments are called "no encoding", "absolute encoding", "sinusoidal encoding", and "relative encoding" respectively.
+			</p>
+
+			<p>
+			Individual plots for training and validation losses over epochs for each experiment is shown in the figure above, as are combined plots for training loss and validation loss over epochs. A full table of the <i>final loss values</i> including the <i>test loss</i> is in the table in the table below.
+			</p>
+
+			<img src="./images/10.png" width=600px/>
+
+			<h4>Computational Performance</h4>
+
+			<p>
+			In terms of computational limits, no encoding, absolute encoding, and sinusoidal encoding all trained at a rate of around 2.5 seconds per iteration. Meanwhile, relative encoding trained at a rate of around 0.7 seconds per iteration. 
+			</p>
+
+			<p>
+			No encoding, absolute encoding, and sinusoidal encoding all occupied about 9.3GB of GPU RAM on Google Colab's A100. Relative encoding, however, required about 20GB of RAM.
+			</p>
+
+			<h2>Discussion</h2>
+
+			<p>Based on our final loss values, our model unfortunately failed to learn much beyond uniformly guessing across all classes. However, we were still able to gain valuable insights into the benefits and limitations of each encoding method. For one, we note that sinusoidal encoding achieved the best loss values, followed by no encoding and absolute encoding, with relative encoding performing the worst. Clearly, it is difficult for a neural network to learn a representative embedding for timestamps that is more useful and informative than a direct function of the timestamp itself. It is worth noting that absolute encodings do have slightly faster convergence than other encoding methods.</p>
+
+			<p>Beyond model accuracy, we noticed that the different encoding methods also have different computational overhead. No encoding, sinusoidal encodings, and absolute embeddings all had approximately similar runtimes and allocated around the same amount of space. Relative encodings, on the other hand, created significant overhead, taking almost three times as long to train. Furthermore, it required almost twice as much space in RAM. This makes sense as relative encoding requires modifications to the attention matrices themselves, which are large tensors to begin with. However, based on our results, we can confidently say that relative encodings are not worth the extra computational overhead.</p>
+
+			<p>Due to computational and time constraints, we were unable to test absolute and relative encodings using MLPs. Furthermore, we believe the model architecture needs some modification as the model capacity was not robust enough to solve our problem of predicting ranks. However, we are confident that the best encoding for timestamps is the sinusoidal one, as it both adds a layer of complexity by creating a higher-dimensional representation while also maintaining simplicity.</p>
+
+		</div>
+	</div>
+
+		<div class="content-margin-container" id="citations">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+						<div class='citation' id="references" style="height:auto"><br>
+							<span style="font-size:16px">References:</span><br><br>
+							<a id="ref_1"></a>[1] <a href="https://arxiv.org/abs/2202.07125">Q. Wen, T. Zhou, C. Zhang, W. Chen, Z. Ma, J. Yan, and L. Sun, “Transformers in time series:
+								A survey,” 2023.</a><br><br>
+							<a id="ref_2"></a>[2] <a href="https://arxiv.org/abs/2012.07436">H. Zhou, S. Zhang, J. Peng, S. Zhang, J. Li, H. Xiong, and W. Zhang, “Informer: Beyond
+								efficient transformer for long sequence time-series forecasting,” 2021.<br><br>
+							<a id="ref_3"></a>[3] <a href="https://arxiv.org/abs/2201.12740">T. Zhou, Z. Ma, Q. Wen, X. Wang, L. Sun, and R. Jin, “Fedformer: Frequency enhanced
+								decomposed transformer for long-term series forecasting,” 2022.<br><br>
+							<a id="ref_4"></a>[4] <a href="https://arxiv.org/abs/2012.07436">H. Wu, J. Xu, J. Wang, and M. Long, “Autoformer: Decomposition transformers with auto-
+								correlation for long-term series forecasting,” 2022.<br><br>
+							<a id="ref_5"></a>[5] <a href="https://arxiv.org/abs/2205.15241">K.-H. Lee, O. Nachum, M. Yang, L. Lee, D. Freeman, W. Xu, S. Guadarrama, I. Fischer, E. Jang,
+								H. Michalewski, and I. Mordatch, “Multi-game decision transformers,” 2022.<br><br>
+							<a id="ref_6"></a>[6] <a href="https://arxiv.org/abs/2106.01345">L. Chen, K. Lu, A. Rajeswaran, K. Lee, A. Grover, M. Laskin, P. Abbeel, A. Srinivas, and
+								I. Mordatch, “Decision transformer: Reinforcement learning via sequence modeling,” 2021.<br><br>
+							<a id="ref_7"></a>[7] <a href="https://arxiv.org/abs/1706.03762">A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, L. Kaiser, and
+								I. Polosukhin, “Attention is all you need,” 2023.<br><br>
+							<a id="ref_8"></a>[8] <a href="https://arxiv.org/abs/1803.02155">P. Shaw, J. Uszkoreit, and A. Vaswani, “Self-attention with relative position representations,”
+								2018.<br><br>
+							<a id="ref_9"></a>[9] <a href="https://aclanthology.org/2022.cl-3.7/">P. Dufter, M. Schmitt, and H. Schütze, “Position information in transformers: An overview,”
+								Computational Linguistics, vol. 48, pp. 733–763, 09 2022.<br><br>
+							<a id="ref_10"></a>[10] <a href="https://arxiv.org/abs/1705.03122">J. Gehring, M. Auli, D. Grangier, D. Yarats, and Y. N. Dauphin, “Convolutional sequence to
+								sequence learning,” 2017.<br><br>
+						</div>
+		    </div>
+		    <div class="margin-right-block">
+            <!-- margin notes for reference block here -->
+		    </div>
+		</div>
+
+	</body>
+
+</html>
